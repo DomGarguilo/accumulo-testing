@@ -20,7 +20,6 @@ import logging
 import time
 import os
 import sys
-from ConfigParser import ConfigParser
 from subprocess import Popen, PIPE
 
 class JavaConfig:
@@ -60,7 +59,7 @@ def runTest(testName, siteConfig, testDir, numNodes, fdata):
     syscall('cp '+nodesPath+' $ACCUMULO_CONF_DIR/tservers');
 
     log('Removing /accumulo directory in HDFS')
-    syscall("hadoop fs -rmr /accumulo")
+    syscall("hadoop fs -rm -r /accumulo")
     
     log('Initializing new Accumulo instance')
     instance = siteConfig.get('INSTANCE_NAME')
@@ -86,7 +85,7 @@ def runTest(testName, siteConfig, testDir, numNodes, fdata):
     numThreads = numNodes
     if int(numNodes) > 128:
         numThreads='128'
-    syscall('pssh -P -h %s -p %s "$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.test.scalability.Run %s client %s >/tmp/scale.out 2>/tmp/scale.err &" < /dev/null' % (nodesPath, numThreads, testName, numNodes))
+    syscall('parallel-ssh -P -h %s -p %s "$ACCUMULO_HOME/bin/accumulo org.apache.accumulo.test.scalability.Run %s client %s >/tmp/scale.out 2>/tmp/scale.err &" < /dev/null' % (nodesPath, numThreads, testName, numNodes))
    
     log('Sleeping for 30 sec before checking how many clients started...')
     time.sleep(30)
@@ -120,9 +119,9 @@ def runTest(testName, siteConfig, testDir, numNodes, fdata):
 
     log('Calculating results from clients')
     times = []
-    totalMs = 0L
-    totalEntries = 0L
-    totalBytes = 0L
+    totalMs = 0
+    totalEntries = 0
+    totalBytes = 0
     for fn in os.listdir(resultsDir):
         for line in open('%s/%s' % (resultsDir,fn)):
             words = line.split()
@@ -134,7 +133,7 @@ def runTest(testName, siteConfig, testDir, numNodes, fdata):
                 totalBytes += long(words[3].strip())
     times.sort()
 
-    print times
+    print (times)
     numClients = len(times)
     min = times[0] / 1000
     avg = (float(totalMs) / numClients) / 1000
@@ -168,19 +167,23 @@ def run(cmd, **kwargs):
     return handle.returncode
 
 def log(msg):
-    print msg
+    print (msg)
     sys.stdout.flush()  
  
 def main():
 
-    if not os.getenv('ACCUMULO_HOME'):
-        raise 'ACCUMULO_HOME needs to be set!'
+    ACCUMULO_HOME = '/home/dgarguilo/github/fluo-uno/install/accumulo-2.1.0-SNAPSHOT'
+    #if not os.getenv('ACCUMULO_HOME'):
+    #    raise 'ACCUMULO_HOME needs to be set!'
+    ACCUMULO_CONF_DIR = ACCUMULO_HOME + '/conf'
+    #if not os.getenv('ACCUMULO_CONF_DIR'):
+    #         raise 'ACCUMULO_CONF_DIR needs to be set!'
 
-    if not os.getenv('ACCUMULO_CONF_DIR'):
-        raise 'ACCUMULO_CONF_DIR needs to be set!'
 
-    if not os.getenv('HADOOP_HOME'):
-		raise 'HADOOP_HOME needs to be set!'
+
+    HADOOP_HOME = '/home/dgarguilo/github/fluo-uno/install/hadoop-3.3.0'
+    #if not os.getenv('HADOOP_HOME'):
+	#	raise 'HADOOP_HOME needs to be set!'
 
     if len(sys.argv) != 2:
         log('Usage: run.py <testName>')
@@ -198,7 +201,7 @@ def main():
     syscall('mkdir %s' % resultsDir)
 
     log('Removing current /accumulo-scale directory')
-    syscall('hadoop fs -rmr /accumulo-scale')
+    syscall('hadoop fs -rm -r /accumulo-scale')
 
     log('Creating new /accumulo-scale directory structure')
     syscall('hadoop fs -mkdir /accumulo-scale')
@@ -211,7 +214,7 @@ def main():
 
     siteConfig = JavaConfig('conf/site.conf');
     tserversPath = siteConfig.get('TSERVERS')
-    maxNodes = file_len(tserversPath)
+    maxNodes = 1 #file_len(tserversPath)
 
     fdata = open('%s/scale.dat' % testDir, 'w')
     fdata.write('Tservs\tClients\tMin\tAvg\tMed\tMax\tEntries\tMB\n')
