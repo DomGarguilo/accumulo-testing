@@ -23,7 +23,7 @@ import sys
 from subprocess import Popen, PIPE
 
 class JavaConfig:
-    '''Enable access to properities in java siteConfig file'''
+    '''Enable access to properties in java siteConfig file'''
     def __init__(self, fname):
         self.prop_d = {}
         for line in open(fname):
