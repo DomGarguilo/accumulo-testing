@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Licensed to the Apache Software Foundation (ASF) under one or more
-  contributor license agreements.  See the NOTICE file distributed with
-  this work for additional information regarding copyright ownership.
-  The ASF licenses this file to You under the Apache License, Version 2.0
-  (the "License"); you may not use this file except in compliance with
-  the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+      https://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>26</version>
+    <version>27</version>
   </parent>
   <groupId>org.apache.accumulo</groupId>
   <artifactId>accumulo-testing</artifactId>
@@ -118,6 +122,57 @@
   <build>
     <pluginManagement>
       <plugins>
+        <!-- check for version updates with 'mvn versions:display-plugin-updates' -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>2.11.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>4.1</version>
+          <configuration>
+            <header>${session.executionRootDirectory}/contrib/license-header.txt</header>
+            <excludes combine.children="append">
+              <exclude>**/DEPENDENCIES</exclude>
+              <exclude>**/LICENSE</exclude>
+              <exclude>**/NOTICE</exclude>
+              <exclude>**/target/**</exclude>
+              <exclude>**/lib/data/**</exclude>
+              <!-- template types are in various formats; update manually if needed -->
+              <exclude>**/*.tftpl</exclude>
+            </excludes>
+            <mapping combine.children="append">
+              <!-- general mappings; module-specific mappings appear in their respective pom -->
+              <!-- individual files; it'd be better if most of these were renamed to end in .sh -->
+              <Makefile>SCRIPT_STYLE</Makefile>
+              <agitator>SCRIPT_STYLE</agitator>
+              <build>SCRIPT_STYLE</build>
+              <cingest>SCRIPT_STYLE</cingest>
+              <docker-entry>SCRIPT_STYLE</docker-entry>
+              <gcs>SCRIPT_STYLE</gcs>
+              <mapred>SCRIPT_STYLE</mapred>
+              <monitor>SCRIPT_STYLE</monitor>
+              <performance>SCRIPT_STYLE</performance>
+              <readers>SCRIPT_STYLE</readers>
+              <rwalk>SCRIPT_STYLE</rwalk>
+              <writers>SCRIPT_STYLE</writers>
+              <!-- extensions -->
+              <c>SLASHSTAR_STYLE</c>
+              <cc>SLASHSTAR_STYLE</cc>
+              <conf>SCRIPT_STYLE</conf>
+              <css>SLASHSTAR_STYLE</css>
+              <example>SCRIPT_STYLE</example>
+              <h>SLASHSTAR_STYLE</h>
+              <java>SLASHSTAR_STYLE</java>
+              <proto>SLASHSTAR_STYLE</proto>
+              <tf>SCRIPT_STYLE</tf>
+              <thrift>SLASHSTAR_STYLE</thrift>
+              <uno>SCRIPT_STYLE</uno>
+            </mapping>
+          </configuration>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
@@ -247,13 +302,12 @@
         <configuration>
           <excludes combine.children="append">
             <exclude>test/bench/lib/data/*</exclude>
-            <exclude>test/compat/japi-compliance/*</exclude>
+            <exclude>test/compat/japi-compliance/exclude_classes.txt</exclude>
             <exclude>contrib/terraform-testing-infrastructure/**/terraform.tfstate*</exclude>
             <exclude>contrib/terraform-testing-infrastructure/**/*.tftpl</exclude>
             <exclude>contrib/terraform-testing-infrastructure/**/.terraform/**</exclude>
             <exclude>contrib/terraform-testing-infrastructure/**/.terraform*</exclude>
             <exclude>contrib/terraform-testing-infrastructure/**/*auto.tfvars*</exclude>
-            <exclude>contrib/terraform-testing-infrastructure/modules/config-files/**</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -288,6 +342,19 @@
                   <goal>sort</goal>
                 </goals>
                 <phase>process-sources</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>license-headers</id>
+                <goals>
+                  <goal>format</goal>
+                </goals>
+                <phase>process-test-resources</phase>
               </execution>
             </executions>
           </plugin>

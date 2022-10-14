@@ -1,4 +1,22 @@
-#! /bin/bash
+#! /usr/bin/env bash
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
 
 set -eo pipefail
 
@@ -91,8 +109,8 @@ openssl rand -out ${software_root}/accumulo/accumulo-${accumulo_version}/conf/pe
 #
 # OpenTelemetry dependencies
 #
-if [ ! -f ${software_root}/accumulo/accumulo-${accumulo_version}/lib/opentelemetry-javaagent-1.18.0.jar ]; then
-  wget https://search.maven.org/remotecontent?filepath=io/opentelemetry/javaagent/opentelemetry-javaagent/1.18.0/opentelemetry-javaagent-1.18.0.jar -O ${software_root}/accumulo/accumulo-${accumulo_version}/lib/opentelemetry-javaagent-1.18.0.jar
+if [ ! -f ${software_root}/accumulo/accumulo-${accumulo_version}/lib/opentelemetry-javaagent-1.19.0.jar ]; then
+  wget https://search.maven.org/remotecontent?filepath=io/opentelemetry/javaagent/opentelemetry-javaagent/1.19.0/opentelemetry-javaagent-1.19.0.jar -O ${software_root}/accumulo/accumulo-${accumulo_version}/lib/opentelemetry-javaagent-1.19.0.jar
 fi
 #
 # Micrometer dependencies
@@ -104,8 +122,8 @@ if [ ! -f ${software_root}/accumulo/accumulo-${accumulo_version}/lib/accumulo-te
     echo "accumulo-test-${accumulo_version}.jar not found, metrics won't work..."
   fi
 fi
-if [ ! -f ${software_root}/accumulo/accumulo-${accumulo_version}/lib/micrometer-registry-statsd-1.9.4.jar ]; then
-  wget https://search.maven.org/remotecontent?filepath=io/micrometer/micrometer-registry-statsd/1.9.4/micrometer-registry-statsd-1.9.4.jar -O ${software_root}/accumulo/accumulo-${accumulo_version}/lib/micrometer-registry-statsd-1.9.4.jar
+if [ ! -f ${software_root}/accumulo/accumulo-${accumulo_version}/lib/micrometer-registry-statsd-1.9.5.jar ]; then
+  wget https://search.maven.org/remotecontent?filepath=io/micrometer/micrometer-registry-statsd/1.9.5/micrometer-registry-statsd-1.9.5.jar -O ${software_root}/accumulo/accumulo-${accumulo_version}/lib/micrometer-registry-statsd-1.9.5.jar
 fi
 
 #
