@@ -32,7 +32,7 @@
   <name>Apache Accumulo Testing</name>
   <description>Testing tools for Apache Accumulo</description>
   <properties>
-    <accumulo.version>2.1.0-SNAPSHOT</accumulo.version>
+    <accumulo.version>3.0.0-SNAPSHOT</accumulo.version>
     <eclipseFormatterStyle>${project.basedir}/contrib/Eclipse-Accumulo-Codestyle.xml</eclipseFormatterStyle>
     <maven.compiler.release>11</maven.compiler.release>
     <maven.compiler.source>11</maven.compiler.source>
@@ -90,10 +90,6 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client-runtime</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
@@ -233,7 +229,7 @@
         <plugin>
           <groupId>net.revelc.code</groupId>
           <artifactId>impsort-maven-plugin</artifactId>
-          <version>1.7.0</version>
+          <version>1.8.0</version>
           <configuration>
             <removeUnused>true</removeUnused>
             <groups>java.,javax.,jakarta.,org.,com.</groups>
