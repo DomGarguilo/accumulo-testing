@@ -54,16 +54,33 @@ public class Config extends Test {
     return new Setting(property, min, max);
   }
 
-  final Property TSERV_READ_AHEAD_MAXCONCURRENT_deprecated = Property.TSERV_SCAN_EXECUTORS_DEFAULT_THREADS;
+  final Property TSERV_READ_AHEAD_MAXCONCURRENT_deprecated =
+      Property.TSERV_SCAN_EXECUTORS_DEFAULT_THREADS;
+
+  @SuppressWarnings("deprecation")
+  final Property TSERV_COMPACTION_SERVICE_DEFAULT_MAX_OPEN_deprecated =
+      Property.TSERV_COMPACTION_SERVICE_DEFAULT_MAX_OPEN;
+
+  @SuppressWarnings("deprecation")
+  final Property TSERV_COMPACTION_SERVICE_DEFAULT_EXECUTORS_deprecated =
+      Property.TSERV_COMPACTION_SERVICE_DEFAULT_EXECUTORS;
+
+  @SuppressWarnings("deprecation")
+  final Property TSERV_WORKQ_THREADS_deprecated = Property.TSERV_WORKQ_THREADS;
+
+  @SuppressWarnings("deprecation")
+  final Property TSERV_TABLET_SPLIT_FINDMIDPOINT_MAXOPEN_deprecated =
+      Property.TSERV_TABLET_SPLIT_FINDMIDPOINT_MAXOPEN;
+
   // @formatter:off
   final Setting[] settings = {
 			s(Property.TSERV_BLOOM_LOAD_MAXCONCURRENT, 1, 10),
 			s(Property.TSERV_DATACACHE_SIZE, 0, 1000000000L),
 			s(Property.TSERV_INDEXCACHE_SIZE, 0, 1000000000L),
 			s(Property.TSERV_CLIENT_TIMEOUT, 100, 10000),
-			s(Property.TSERV_COMPACTION_SERVICE_DEFAULT_EXECUTORS, 1, 10),
+			s(TSERV_COMPACTION_SERVICE_DEFAULT_EXECUTORS_deprecated, 1, 10),
 			s(Property.TSERV_MAJC_DELAY, 100, 10000),
-			s(Property.TSERV_COMPACTION_SERVICE_DEFAULT_MAX_OPEN, 3, 100),
+			s(TSERV_COMPACTION_SERVICE_DEFAULT_MAX_OPEN_deprecated, 3, 100),
 			s(Property.TSERV_MINC_MAXCONCURRENT, 1, 10),
 			s(Property.TSERV_DEFAULT_BLOCKSIZE, 100000, 10000000L),
 			s(Property.TSERV_MAX_IDLE, 10000, 500 * 1000),
@@ -77,9 +94,9 @@ public class Config extends Test {
 			s(Property.TSERV_MINTHREADS, 1, 100),
 			s(Property.TSERV_SESSION_MAXIDLE, 100, 5 * 60 * 1000),
 			s(Property.TSERV_WAL_SORT_BUFFER_SIZE, 1024 * 1024, 1024 * 1024 * 1024L),
-			s(Property.TSERV_TABLET_SPLIT_FINDMIDPOINT_MAXOPEN, 5, 100),
+			s(TSERV_TABLET_SPLIT_FINDMIDPOINT_MAXOPEN_deprecated, 5, 100),
 			s(Property.TSERV_WAL_BLOCKSIZE, 1024 * 1024,1024 * 1024 * 1024 * 10L),
-			s(Property.TSERV_WORKQ_THREADS, 1, 10),
+			s(TSERV_WORKQ_THREADS_deprecated, 1, 10),
 			s(Property.MANAGER_BULK_TIMEOUT, 10, 600),
 			s(Property.MANAGER_FATE_THREADPOOL_SIZE, 1, 100),
 			s(Property.MANAGER_RECOVERY_DELAY, 0, 100),
@@ -170,8 +187,8 @@ public class Config extends Test {
     Setting setting = tableSettings[choice];
 
     // pick a random table
-    SortedSet<String> tables = env.getAccumuloClient().tableOperations().list().tailSet("ctt")
-        .headSet("ctu");
+    SortedSet<String> tables =
+        env.getAccumuloClient().tableOperations().list().tailSet("ctt").headSet("ctu");
     if (tables.isEmpty())
       return;
     String table = random.nextSample(tables, 1)[0].toString();
@@ -198,8 +215,8 @@ public class Config extends Test {
     Setting setting = tableSettings[choice];
 
     // pick a random table
-    SortedSet<String> namespaces = env.getAccumuloClient().namespaceOperations().list()
-        .tailSet("nspc").headSet("nspd");
+    SortedSet<String> namespaces =
+        env.getAccumuloClient().namespaceOperations().list().tailSet("nspc").headSet("nspd");
     if (namespaces.isEmpty())
       return;
     String namespace = random.nextSample(namespaces, 1)[0].toString();
